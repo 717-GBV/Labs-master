@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.patch
 import org.springframework.test.web.servlet.post
@@ -63,7 +64,7 @@ internal class BankControllerTest {
                 content { contentType(MediaType.APPLICATION_JSON) }
                 jsonPath("accountNumber") { value("9999") }
                 jsonPath("trust") { value(1.0) }
-                jsonPath("transectionFee") { value(10) }
+                jsonPath("transactionFee") { value(10) }
             }
     }
 
@@ -92,7 +93,7 @@ internal class BankControllerTest {
                 content { contentType(MediaType.APPLICATION_JSON) }
                 jsonPath("accountNumber") { value(accountNumber) }
                 jsonPath("trust") { value(5.0) }
-                jsonPath("transectionFee") { value(1) }
+                jsonPath("transactionFee") { value(1) }
             }
     }
 
@@ -109,8 +110,23 @@ internal class BankControllerTest {
                 content { contentType(MediaType.APPLICATION_JSON) }
                 jsonPath("accountNumber") { value(accountNumber) }
                 jsonPath("trust") { value(5.0) }
-                jsonPath("transectionFee") { value(50) }
+                jsonPath("transactionFee") { value(50) }
             }
     }
 
+    @Test
+    fun `should return ok when delete bank`() {
+        val accountNumber = "3"
+        mockMvc.delete("/api/banks/$accountNumber")
+            .andDo { print() }
+            .andExpect { status { isOk() } }
+    }
+
+    @Test
+    fun `should return 404 when delete not existet bank`() {
+        val accountNumber = "5"
+        mockMvc.delete("/api/banks/$accountNumber")
+            .andDo { print() }
+            .andExpect { status { isNotFound() } }
+    }
 }

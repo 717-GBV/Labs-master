@@ -5,6 +5,7 @@ import com.raywenderlich.nftmarketplace.model.BankPatchRequest
 import com.raywenderlich.nftmarketplace.service.BankService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -49,6 +50,16 @@ class BankController(private val service: BankService) {
         val updatedBank = service.updateBank(accountNumber, patchRequest)
         return if (updatedBank != null) {
             ResponseEntity.ok(updatedBank)
+        } else {
+            ResponseEntity.notFound().build()
+        }
+    }
+
+    @DeleteMapping("/{accountNumber}")
+    fun deleteBank(@PathVariable accountNumber: String): ResponseEntity<Bank> {
+        val deletedBank = service.deleteBank(accountNumber)
+        return if (deletedBank != null) {
+            ResponseEntity.ok(deletedBank)
         } else {
             ResponseEntity.notFound().build()
         }

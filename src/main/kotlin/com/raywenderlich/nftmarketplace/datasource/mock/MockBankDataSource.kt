@@ -38,4 +38,11 @@ class MockBankDataSource : BankDataSource{
         banks[index] = updatedBank
         return updatedBank
     }
+
+    override fun deleteBank(accountNumber: String): Bank? {
+        val bank = banks.find { it.accountNumber == accountNumber } ?: return null
+        val index = banks.indexOf(bank)
+        banks.removeAt(index)
+        return bank
+    }
 }
